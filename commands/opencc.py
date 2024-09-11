@@ -5,8 +5,7 @@ from opencc import OpenCC
 import json
 from tqdm import tqdm
 
-from util.walker import walker
-from util.load_json import load_json
+from util import walker, load_json, dump_json
 
 
 def opencc(
@@ -62,4 +61,4 @@ def opencc(
         new_file.parent.mkdir(parents=True, exist_ok=True)
 
         # write the file
-        json.dump(data, new_file.open("w", encoding="utf-8"), ensure_ascii=False, indent=4)
+        dump_json(data, new_file)

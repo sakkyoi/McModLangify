@@ -4,7 +4,7 @@ import typer
 from typing_extensions import Annotated
 from tqdm import tqdm
 
-from util.walker import walker
+from util import walker
 
 
 def validate_json(
