@@ -1,5 +1,6 @@
-from os.path import dirname, basename, isfile, join
-import glob
+from .extract import extract
+from .validate_json import validate_json
+from .opencc import opencc
+from .deepl import deepl
 
-modules = glob.glob(join(dirname(__file__), "*.py"))
-__all__ = [basename(f)[:-3] for f in modules if isfile(f) and not f.endswith('__init__.py')]
+__all__ = ["extract", "validate_json", "opencc", "deepl"]

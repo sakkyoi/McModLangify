@@ -2,7 +2,6 @@ import pathlib
 import typer
 from typing_extensions import Annotated
 from opencc import OpenCC
-import json
 from tqdm import tqdm
 
 from util import walker, load_json, dump_json

@@ -10,8 +10,7 @@ load_dotenv()
 app = Typer()
 
 for command in commands.__all__:
-    for _, obj in inspect.getmembers(importlib.import_module(f"commands.{command}"), inspect.isfunction):
-        app.command()(obj)
+    app.command()(getattr(commands, command))
 
 
 if __name__ == '__main__':
