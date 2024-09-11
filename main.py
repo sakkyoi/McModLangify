@@ -1,8 +1,11 @@
 from typer import Typer
 import importlib
 import inspect
+from dotenv import load_dotenv
 
 import commands
+
+load_dotenv()
 
 app = Typer()
 
