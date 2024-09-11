@@ -6,6 +6,7 @@ import json
 from tqdm import tqdm
 
 from util.walker import walker
+from util.load_json import load_json
 
 
 def opencc(
@@ -50,13 +51,7 @@ def opencc(
             continue
 
         # load the json file
-        try:
-            data = json.loads(file.read_bytes())
-        except json.JSONDecodeError as e:
-            # tell the user which file is invalid and what is the error, then break the loop
-            print(f"{file}: {e}")
-            print("Run validate-json command to check for errors first, fix them before continuing.")
-            break
+        data = load_json(file)
 
         # convert the data value by value
         for k, v in tqdm(data.items(), desc=f"Converting {file.name}"):
