@@ -7,6 +7,8 @@ from tqdm import tqdm
 
 from util import walker, load_json, dump_json
 
+is_deepl_cli = "DeepLCLI" in deepl_api.__all__  # check which DeepL API client is installed, deepl_cli or deepl(official)
+
 
 def deepl(
         source: Annotated[
@@ -54,15 +56,23 @@ def deepl(
             )
         ] = "",
 ):
-    # check if the API key is provided, if not, check the environment variable
-    if not api_key:
-        api_key = os.environ.get("DEEPL_API_KEY")
+    if is_deepl_cli:
+        print("Using DeepL CLI")
+        translater = deepl_api.DeepLCLI("en", "zh-hant")
+        translate = lambda x: translater.translate(x)
+    else:
+        print("Using Official DeepL API")
+        # check if the API key is provided, if not, check the environment variable
+        if not api_key:
+            api_key = os.environ.get("DEEPL_API_KEY")
 
-    # check again cause the environment variable might be empty
-    if not api_key:
-        raise ValueError("API key is not provided.")
+        # check again cause the environment variable might be empty
+        if not api_key:
+            raise ValueError("API key is not provided.")
 
-    translater = deepl_api.Translator(api_key)
+        translater = deepl_api.Translator(api_key)
+        translate = lambda x: translater.translate_text(x, source_lang=source_locale_deepl,
+                                                        target_lang=target_locale_deepl)
 
     for file in tqdm(walker(source), desc="Converting files"):
         # skip files that are not source locale
@@ -74,7 +84,7 @@ def deepl(
 
         # convert the data value by value
         for k, v in tqdm(data.items(), desc=f"Converting {file.name}"):
-            data[k] = translater.translate_text(v, source_lang=source_locale_deepl, target_lang=target_locale_deepl)
+            data[k] = translate(v)
 
         # construct the target path and create the directory if it doesn't exist
         new_file = target / file.relative_to(source).with_name(file.name.replace(source_locale, target_locale))
